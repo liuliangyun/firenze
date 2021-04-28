@@ -379,14 +379,16 @@ Then
 + 游戏结算时，如果剩余玩家的投注金额相同，则没有All in情况。
 A：20 没有All in
 B：20 没有All in
-C：10 All in
-D：15 All in 
+C：20 没有All in
+D：20 没有All in
+
 
 + 游戏结算时，如果剩余玩家的投注金额不同，则存在All in情况。
 A：20 没有All in
 B：20 没有All in
-C：20 没有All in
-D：20 没有All in
+C：10 All in
+D：15 All in 
+
 
 子池金额平均数为0
 剩余玩家A，B，C，D，投注金额分别减去子池金额平均数
