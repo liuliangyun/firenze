@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import org.assertj.core.api.Assertions;
 
 public class TexasTest {
     @Test
@@ -50,7 +50,7 @@ public class TexasTest {
 
         // Then
         assertEquals(playerB, game.getCurrentPlayer());
-        assertThat(game.getWaitingPlayers().containsAll(Arrays.asList(playerC, playerD)), is(true));
+        Assertions.assertThat(game.getWaitingPlayers()).containsExactly(playerC, playerD);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class TexasTest {
 
         // Then
         assertEquals(playerC, game.getCurrentPlayer());
-        assertThat(game.getWaitingPlayers().containsAll(Arrays.asList(playerD)), is(true));
+        Assertions.assertThat(game.getWaitingPlayers()).containsExactly(playerD);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class TexasTest {
 
         // Then
         assertEquals(playerA, game.getCurrentPlayer());
-        assertThat(game.getWaitingPlayers().containsAll(Arrays.asList(playerB, playerC)), is(true));
+        Assertions.assertThat(game.getWaitingPlayers()).containsExactly(playerB, playerC);
     }
 
     @Test
@@ -248,7 +248,7 @@ public class TexasTest {
         game.setCurrentPlayer(playerA);
 
         // Then
-        assertThat(game.getOptionalActions().contains(Action.CHECK), is(true));
+        assertTrue(game.getOptionalActions().contains(Action.CHECK));
     }
 
     @Test
@@ -268,7 +268,7 @@ public class TexasTest {
         game.setCurrentPlayer(playerA);
 
         // Then
-        assertThat(game.getOptionalActions().contains(Action.ALLIN), is(true));
+        assertTrue(game.getOptionalActions().contains(Action.ALLIN));
     }
 
     @Test
@@ -288,7 +288,7 @@ public class TexasTest {
         game.setCurrentPlayer(playerA);
 
         // Then
-        assertThat(game.getOptionalActions().contains(Action.ALLIN), is(false));
+        assertFalse(game.getOptionalActions().contains(Action.ALLIN));
     }
 
     @Test
@@ -308,7 +308,7 @@ public class TexasTest {
         game.setCurrentPlayer(playerA);
 
         // Then
-        assertThat(game.getOptionalActions().contains(Action.ALLIN), is(false));
+        assertFalse(game.getOptionalActions().contains(Action.ALLIN));
     }
 
     @Test
@@ -330,8 +330,8 @@ public class TexasTest {
         playerA.allIn(game);
 
         // Then
-        assertThat(game.getAllInPlayers().contains(playerA), is(true));
-        assertThat(game.getGamingPlayers().containsAll(Arrays.asList(playerA, playerB, playerC, playerD)), is(true));
+        Assertions.assertThat(game.getAllInPlayers()).containsExactly(playerA);
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerA, playerB, playerC, playerD);
     }
 
     @Test
@@ -352,8 +352,7 @@ public class TexasTest {
         game.setCurrentPlayer(playerA);
 
         // Then
-        assertEquals(1, game.getOptionalActions().size());
-        assertThat(game.getOptionalActions().contains(Action.CHECK), is(true));
+        Assertions.assertThat(game.getOptionalActions()).containsExactly(Action.CHECK);
     }
 
     @Test
@@ -373,8 +372,7 @@ public class TexasTest {
         playerA.fold(game);
 
         // Then
-        assertEquals(3, game.getGamingPlayers().size());
-        assertThat(game.getGamingPlayers().containsAll(Arrays.asList(playerB, playerC, playerD)), is(true));
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerB, playerC, playerD);
     }
 
     @Test
@@ -398,8 +396,7 @@ public class TexasTest {
 
         // Then
         assertEquals(4, game.getCurrentRoundIdx());
-        assertEquals(1, game.getGamingPlayers().size());
-        assertThat(game.getGamingPlayers().contains(playerD), is(true));
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerD);
     }
 
     @Test
@@ -423,7 +420,7 @@ public class TexasTest {
 
         // Then
         assertEquals(4, game.getCurrentRoundIdx());
-        assertThat(game.getGamingPlayers().containsAll(Arrays.asList(playerA, playerB, playerC, playerD)), is(true));
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerA, playerB, playerC, playerD);
     }
 
     @Test
@@ -447,8 +444,7 @@ public class TexasTest {
 
         // Then
         assertEquals(4, game.getCurrentRoundIdx());
-        assertEquals(3, game.getGamingPlayers().size());
-        assertThat(game.getGamingPlayers().containsAll(Arrays.asList(playerB, playerC, playerD)), is(true));
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerB, playerC, playerD);
     }
 
     @Test
@@ -472,7 +468,7 @@ public class TexasTest {
 
         // Then
         assertEquals(4, game.getCurrentRoundIdx());
-        assertThat(game.getGamingPlayers().containsAll(Arrays.asList(playerA, playerB, playerC, playerD)), is(true));
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerA, playerB, playerC, playerD);
     }
 
     @Test
@@ -496,7 +492,7 @@ public class TexasTest {
 
         // Then
         assertEquals(4, game.getCurrentRoundIdx());
-        assertThat(game.getGamingPlayers().containsAll(Arrays.asList(playerA, playerB, playerC, playerD)), is(true));
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerA, playerB, playerC, playerD);
     }
 
     @Test
@@ -520,7 +516,7 @@ public class TexasTest {
 
         // Then
         assertEquals(3, game.getCurrentRoundIdx());
-        assertThat(game.getGamingPlayers().containsAll(Arrays.asList(playerA, playerB, playerC, playerD)), is(true));
+        Assertions.assertThat(game.getGamingPlayers()).containsExactly(playerA, playerB, playerC, playerD);
     }
 
     @Test
@@ -543,8 +539,7 @@ public class TexasTest {
         game.goToClearRound();
 
         // Then
-        assertEquals(playerA, game.getWinners().get(0));
-        assertEquals(1, game.getWinners().size());
+        Assertions.assertThat(game.getWinners()).containsExactly(playerA);
         assertEquals(120, playerA.getCurrentCounter());
     }
 
