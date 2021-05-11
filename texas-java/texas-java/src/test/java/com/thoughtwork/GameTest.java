@@ -1,13 +1,12 @@
 package com.thoughtwork;
 
-import com.thoughtwork.action.Bet;
-import com.thoughtwork.action.Fold;
-import com.thoughtwork.action.Pass;
-import com.thoughtwork.action.Raise;
+import com.thoughtwork.action.*;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
+
+// 不考虑Allin
 public class GameTest {
     @Test
     public void player_a_should_be_the_first_active_player () {
@@ -176,5 +175,70 @@ public class GameTest {
 
         assertEquals(Round.FLOP, game.getCurrentRound());
         assertEquals("B", game.getActivePlayer().getName());
+    }
+
+    @Test
+    public void should_can_pass_when_player_wager_equal_to_current_bid () {
+        Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+        assertEquals(Round.PREFLOP, game.getCurrentRound());
+
+        assertEquals("A", game.getActivePlayer().getName());
+        assertTrue(game.getActivePlayerActions().contains(ActionType.PASS));
+        game.execute(new Bet());
+
+        assertEquals("B", game.getActivePlayer().getName());
+        assertFalse(game.getActivePlayerActions().contains(ActionType.PASS));
+    }
+
+    @Test
+    public void should_enter_final_round_when_only_one_active_player () {
+        Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+        assertEquals(Round.PREFLOP, game.getCurrentRound());
+
+        assertEquals("A", game.getActivePlayer().getName());
+        game.execute(new Fold());
+
+        assertEquals("B", game.getActivePlayer().getName());
+        game.execute(new Fold());
+
+        assertEquals("C", game.getActivePlayer().getName());
+        game.execute(new Fold());
+
+        assertEquals(Round.SHOWDOWN, game.getCurrentRound());
+    }
+
+    @Test
+    public void should_player_win_when_player_is_the_only_one_active_player () {
+        Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+        assertEquals(Round.PREFLOP, game.getCurrentRound());
+
+        assertEquals("A", game.getActivePlayer().getName());
+        game.execute(new Bet());
+
+        assertEquals("B", game.getActivePlayer().getName());
+        game.execute(new Fold());
+
+        assertEquals("C", game.getActivePlayer().getName());
+        game.execute(new Fold());
+
+        assertEquals("D", game.getActivePlayer().getName());
+        game.execute(new Bet());
+
+        assertEquals(Round.FLOP, game.getCurrentRound());
+        assertEquals("A", game.getActivePlayer().getName());
+        game.execute(new Fold());
+
+        assertEquals(Round.SHOWDOWN, game.getCurrentRound());
+        assertEquals("D", game.getWinners().get(0).getName());
+    }
+
+    @Test
+    public void should_win_all_pot_when_only_one_winner () {
+
+    }
+
+    @Test
+    public void should_divide_pot_when_has_multiple_winners () {
+
     }
 }

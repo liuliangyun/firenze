@@ -1,6 +1,6 @@
 package com.thoughtwork;
 
-import com.thoughtwork.action.Action;
+import com.thoughtwork.action.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,6 +9,7 @@ public class Game {
     private Player[] players;
     private int pot;
     private Round currentRound;
+    private List<Player> winners;
 
     public Game(Player ...players) {
         this.players = players;
@@ -35,6 +36,13 @@ public class Game {
         return currentRound;
     }
 
+    public List<Player> getWinners() {
+        return winners;
+    }
+
+    public void setWinners(List<Player> winners) {
+        this.winners = winners;
+    }
 
     public void execute(Action action) {
         Player activePlayer = currentRound.getAwaitingPlayers().poll();
@@ -43,12 +51,18 @@ public class Game {
     }
 
     private void nextRound() {
+        int lastBid = currentRound.getCurrentBid();
+        Queue<Player> lastAwaitingPlayers = currentRound.getAwaitingPlayers();
+        Map<Player, Integer> lastRoundWagers = currentRound.getRoundWagers();
+
         List<Player> activePlayers = Arrays.stream(players).filter(Player::isActive).collect(Collectors.toList());
-        if (activePlayers.stream().allMatch(Player::isTookAction)  &&
+        if (activePlayers.size() == 1) {
+            currentRound = Round.values()[Round.values().length - 1];
+            initCurrentRound(lastBid, lastAwaitingPlayers, lastRoundWagers);
+            setWinners(Arrays.asList(getActivePlayer()));
+        }
+        else if (activePlayers.stream().allMatch(Player::isTookAction)  &&
                 activePlayers.stream().allMatch(player -> currentRound.getPlayerWager(player) == currentRound.getCurrentBid())) {
-            int lastBid = currentRound.getCurrentBid();
-            Queue<Player> lastAwaitingPlayers = currentRound.getAwaitingPlayers();
-            Map<Player, Integer> lastRoundWagers = currentRound.getRoundWagers();
             currentRound = Round.values()[currentRound.ordinal() + 1];
             initCurrentRound(lastBid, lastAwaitingPlayers, lastRoundWagers);
         }
@@ -68,6 +82,10 @@ public class Game {
 
     public Player getActivePlayer() {
         return currentRound.getActivePlayer();
+    }
+
+    public Set<ActionType> getActivePlayerActions() {
+        return currentRound.getActivePlayerActions();
     }
 
 }

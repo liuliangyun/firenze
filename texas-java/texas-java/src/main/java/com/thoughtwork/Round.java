@@ -1,7 +1,11 @@
 package com.thoughtwork;
 
+import com.thoughtwork.action.ActionType;
+
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 public enum Round {
     PREFLOP,
@@ -53,5 +57,19 @@ public enum Round {
 
     public Player getActivePlayer() {
         return awaitingPlayers.peek();
+    }
+
+    public Set<ActionType> getActivePlayerActions() {
+        Set<ActionType> actions = new HashSet<>();
+        actions.add(ActionType.FOLD);
+        if (roundWagers.get(getActivePlayer()) == currentBid) {
+            actions.add(ActionType.BET);
+            actions.add(ActionType.PASS);
+            actions.add(ActionType.RAISE);
+        } else if (roundWagers.get(getActivePlayer()) < currentBid) {
+            actions.add(ActionType.BET);
+            actions.add(ActionType.RAISE);
+        }
+        return actions;
     }
 }
