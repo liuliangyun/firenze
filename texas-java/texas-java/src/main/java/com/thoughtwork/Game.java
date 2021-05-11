@@ -1,6 +1,7 @@
 package com.thoughtwork;
 
 import com.thoughtwork.action.*;
+import com.thoughtwork.poker.Poker;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,13 +10,20 @@ public class Game {
     private Player[] players;
     private int pot;
     private Round currentRound;
+
+    private Poker poker;
+
     private List<Player> winners;
+
 
     public Game(Player ...players) {
         this.players = players;
         this.pot = 0;
         this.currentRound = Round.PREFLOP;
         initCurrentRound(0, new LinkedList<>(Arrays.asList(players)), Arrays.stream(players).collect(Collectors.toMap(p -> p, p -> 0)));
+
+        poker = new Poker();
+        poker.dealCardsForPlayers(players);
     }
 
     private void initCurrentRound(int bid, Queue<Player> awaitingPlayers, Map<Player, Integer> roundWagers) {
@@ -34,6 +42,10 @@ public class Game {
 
     public Round getCurrentRound() {
         return currentRound;
+    }
+
+    public Poker getPoker() {
+        return poker;
     }
 
     public List<Player> getWinners() {
@@ -65,6 +77,7 @@ public class Game {
                 activePlayers.stream().allMatch(player -> currentRound.getPlayerWager(player) == currentRound.getCurrentBid())) {
             currentRound = Round.values()[currentRound.ordinal() + 1];
             initCurrentRound(lastBid, lastAwaitingPlayers, lastRoundWagers);
+            poker.dealPublicCards(currentRound);
         }
     }
 

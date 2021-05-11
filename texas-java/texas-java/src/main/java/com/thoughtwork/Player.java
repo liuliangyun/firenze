@@ -1,11 +1,18 @@
 package com.thoughtwork;
 
+import com.thoughtwork.poker.Card;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Player {
     private String name;
     private boolean active;
     private boolean tookAction;
+
+    //手牌
+    private List<Card> cards = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
@@ -50,4 +57,11 @@ public class Player {
         this.tookAction = tookAction;
     }
 
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
+    }
 }
