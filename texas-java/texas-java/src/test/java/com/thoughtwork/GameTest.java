@@ -191,6 +191,25 @@ public class GameTest {
     }
 
     @Test
+    public void should_can_not_bet_when_player_wager_equal_to_current_bid_and_not_empty() {
+        Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+        assertEquals(Round.PREFLOP, game.getCurrentRound());
+        assertEquals(0, game.getCurrentRound().getCurrentBid());
+        assertEquals("A", game.getActivePlayer().getName());
+        assertTrue(game.getActivePlayerActions().contains(ActionType.BET));
+
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+
+        assertEquals(Round.FLOP, game.getCurrentRound());
+        assertEquals(1, game.getCurrentRound().getCurrentBid());
+        assertEquals("A", game.getActivePlayer().getName());
+        assertFalse(game.getActivePlayerActions().contains(ActionType.BET));
+    }
+
+    @Test
     public void should_enter_final_round_when_only_one_active_player () {
         Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
         assertEquals(Round.PREFLOP, game.getCurrentRound());
@@ -231,6 +250,63 @@ public class GameTest {
         assertEquals(Round.SHOWDOWN, game.getCurrentRound());
         assertEquals("D", game.getWinners().get(0).getName());
     }
+
+    @Test
+    public void should_game_poker_has_52_cards () {
+        Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+
+        assertEquals(52, game.getPoker().getCardList().size());
+    }
+
+    @Test
+    public void should_deal_2_cards_for_each_player_when_game_start () {
+        Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+
+        assertEquals(2, game.getPlayers()[0].getCards().size());
+        assertEquals(2, game.getPlayers()[1].getCards().size());
+        assertEquals(2, game.getPlayers()[2].getCards().size());
+        assertEquals(2, game.getPlayers()[3].getCards().size());
+    }
+
+    @Test
+    public void should_deal_public_cards_when_enter_some_round () {
+        Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+        assertEquals(Round.PREFLOP, game.getCurrentRound());
+        assertEquals(0, game.getPoker().getPublicCards().size());
+
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+
+        assertEquals(Round.FLOP, game.getCurrentRound());
+        assertEquals(3, game.getPoker().getPublicCards().size());
+
+        game.execute(new Raise(2));
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+
+        assertEquals(Round.TURN, game.getCurrentRound());
+        assertEquals(4, game.getPoker().getPublicCards().size());
+
+        game.execute(new Raise(3));
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+
+        assertEquals(Round.RIVER, game.getCurrentRound());
+        assertEquals(5, game.getPoker().getPublicCards().size());
+
+        game.execute(new Raise(4));
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+
+        assertEquals(Round.SHOWDOWN, game.getCurrentRound());
+        assertEquals(5, game.getPoker().getPublicCards().size());
+    }
+
 
     @Test
     public void should_win_all_pot_when_only_one_winner () {

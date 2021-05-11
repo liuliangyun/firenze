@@ -14,6 +14,7 @@ public class Poker {
     public Poker() {
         this.cardList = createPoker();
         exchangeShuffle();
+        this.publicCards = new ArrayList<>();
     }
 
     // 生成一副不带大小王的牌
@@ -77,4 +78,7 @@ public class Poker {
         return cardList;
     }
 
+    public List<Card> getPublicCards() {
+        return publicCards;
+    }
 }

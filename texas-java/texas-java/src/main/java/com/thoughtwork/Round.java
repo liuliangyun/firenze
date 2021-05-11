@@ -63,7 +63,9 @@ public enum Round {
         Set<ActionType> actions = new HashSet<>();
         actions.add(ActionType.FOLD);
         if (roundWagers.get(getActivePlayer()) == currentBid) {
-            actions.add(ActionType.BET);
+            if (currentBid == 0) {
+                actions.add(ActionType.BET);
+            }
             actions.add(ActionType.PASS);
             actions.add(ActionType.RAISE);
         } else if (roundWagers.get(getActivePlayer()) < currentBid) {

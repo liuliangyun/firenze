@@ -48,6 +48,10 @@ public class Game {
         return poker;
     }
 
+    public Player[] getPlayers() {
+        return players;
+    }
+
     public List<Player> getWinners() {
         return winners;
     }
