@@ -2,7 +2,7 @@ package com.thoughtwork.poker;
 
 import java.util.Objects;
 
-public class Card implements Comparable {
+public class Card {
     private Suit suit;
     private Point point;
 
@@ -25,12 +25,6 @@ public class Card implements Comparable {
 
     public void setPoint(Point point) {
         this.point = point;
-    }
-
-    @Override
-    public int compareTo(Object otherCard) {
-        Card other = (Card) otherCard;
-        return this.point.ordinal() - other.getPoint().ordinal();
     }
 
     @Override
