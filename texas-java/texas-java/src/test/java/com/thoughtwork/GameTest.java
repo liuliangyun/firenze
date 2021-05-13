@@ -248,7 +248,8 @@ public class GameTest {
         game.execute(new Fold());
 
         assertEquals(Round.SHOWDOWN, game.getCurrentRound());
-        assertEquals("D", game.getWinners().get(0).getName());
+        assertTrue(game.getActivePlayer().isWin());
+        assertEquals(game.getPot(), game.getActivePlayer().getAward());
     }
 
     @Test

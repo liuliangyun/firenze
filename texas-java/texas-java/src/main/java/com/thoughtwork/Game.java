@@ -13,8 +13,6 @@ public class Game {
 
     private Poker poker;
 
-    private List<Player> winners;
-
 
     public Game(Player ...players) {
         this.players = players;
@@ -52,13 +50,6 @@ public class Game {
         return players;
     }
 
-    public List<Player> getWinners() {
-        return winners;
-    }
-
-    public void setWinners(List<Player> winners) {
-        this.winners = winners;
-    }
 
     public void execute(Action action) {
         Player activePlayer = currentRound.getAwaitingPlayers().poll();
@@ -75,7 +66,8 @@ public class Game {
         if (activePlayers.size() == 1) {
             currentRound = Round.values()[Round.values().length - 1];
             initCurrentRound(lastBid, lastAwaitingPlayers, lastRoundWagers);
-            setWinners(Arrays.asList(getActivePlayer()));
+            getActivePlayer().setWin(true);
+            getActivePlayer().setAward(pot);
         }
         else if (activePlayers.stream().allMatch(Player::isTookAction)  &&
                 activePlayers.stream().allMatch(player -> currentRound.getPlayerWager(player) == currentRound.getCurrentBid())) {

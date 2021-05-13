@@ -10,6 +10,8 @@ public class Player {
     private String name;
     private boolean active;
     private boolean tookAction;
+    private boolean isWin;
+    private int award;
 
     //手牌
     private List<Card> cards = new ArrayList<>();
@@ -18,6 +20,8 @@ public class Player {
         this.name = name;
         this.active = true;
         this.tookAction = false;
+        this.isWin = false;
+        this.award = 0;
     }
 
     public String getName() {
@@ -63,5 +67,21 @@ public class Player {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public boolean isWin() {
+        return isWin;
+    }
+
+    public void setWin(boolean win) {
+        isWin = win;
+    }
+
+    public int getAward() {
+        return award;
+    }
+
+    public void setAward(int award) {
+        this.award = award;
     }
 }
