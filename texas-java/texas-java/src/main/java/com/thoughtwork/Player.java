@@ -1,6 +1,7 @@
 package com.thoughtwork;
 
 import com.thoughtwork.poker.Card;
+import com.thoughtwork.poker.PokerResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +12,18 @@ public class Player {
     private boolean active;
     private boolean tookAction;
 
-    private int score;
     private boolean isWin;
     private int award;
 
     //手牌
     private List<Card> cards = new ArrayList<>();
+    //玩家最佳组合牌型
+    private PokerResult pokerResult = null;
 
     public Player(String name) {
         this.name = name;
         this.active = true;
         this.tookAction = false;
-        this.score = 0;
         this.isWin = false;
         this.award = 0;
     }
@@ -72,14 +73,6 @@ public class Player {
         this.cards = cards;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public boolean isWin() {
         return isWin;
     }
@@ -94,5 +87,13 @@ public class Player {
 
     public void setAward(int award) {
         this.award = award;
+    }
+
+    public PokerResult getPokerResult() {
+        return pokerResult;
+    }
+
+    public void setPokerResult(PokerResult pokerResult) {
+        this.pokerResult = pokerResult;
     }
 }

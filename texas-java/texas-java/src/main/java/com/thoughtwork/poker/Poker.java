@@ -88,7 +88,7 @@ public class Poker {
             cards.addAll(publicCards);
 
             int score = PokerUtils.getBestScore(cards);
-            player.setScore(score);
+            player.setPokerResult(PokerResult.valueOf(score));
         });
     }
 }

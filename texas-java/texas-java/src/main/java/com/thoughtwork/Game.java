@@ -76,11 +76,15 @@ public class Game {
             // 进入游戏结算后，剩余玩家进行比牌，赢家瓜分奖池
             if (currentRound == Round.SHOWDOWN) {
                 poker.showdown(activePlayers);
-                int bestScore = activePlayers.stream().map(Player::getScore).max(Integer::compareTo).get();
+                int bestScore = activePlayers
+                        .stream()
+                        .map(player -> player.getPokerResult().getValue())
+                        .max(Integer::compareTo)
+                        .get();
 
                 List<Player> winners = activePlayers
                         .stream()
-                        .filter(player -> player.getScore() == bestScore)
+                        .filter(player -> player.getPokerResult().getValue() == bestScore)
                         .collect(Collectors.toList());
                 winners.forEach(player -> {
                     player.setWin(true);
