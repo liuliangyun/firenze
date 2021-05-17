@@ -10,6 +10,8 @@ public class Player {
     private String name;
     private boolean active;
     private boolean tookAction;
+
+    private int score;
     private boolean isWin;
     private int award;
 
@@ -20,6 +22,7 @@ public class Player {
         this.name = name;
         this.active = true;
         this.tookAction = false;
+        this.score = 0;
         this.isWin = false;
         this.award = 0;
     }
@@ -67,6 +70,14 @@ public class Player {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public boolean isWin() {
