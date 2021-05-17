@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 
 // 不考虑Allin
+// 不考虑牌型相同时，点数大小的比较
 public class GameTest {
     @Test
     public void player_a_should_be_the_first_active_player () {
@@ -270,7 +271,7 @@ public class GameTest {
     }
 
     @Test
-    public void should_deal_public_cards_when_enter_some_round () {
+    public void should_deal_public_cards_when_enter_some_round_before_showdown () {
         Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
         assertEquals(Round.PREFLOP, game.getCurrentRound());
         assertEquals(0, game.getPoker().getPublicCards().size());

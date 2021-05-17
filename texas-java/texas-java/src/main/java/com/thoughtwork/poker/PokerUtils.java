@@ -1,8 +1,7 @@
 package com.thoughtwork.poker;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class PokerUtils {
@@ -29,6 +28,7 @@ public class PokerUtils {
     // cards 长度为5
     private static int getScore(List<Card> cards) {
         List<Integer> resultList = new ArrayList<>();
+        resultList.add(royalStraightFlush(cards));
         resultList.add(straightFlush(cards));
         resultList.add(fourOfAKind(cards));
         resultList.add(fullHouse(cards));
@@ -43,11 +43,26 @@ public class PokerUtils {
     }
 
     /**
+     * 皇家同花顺
+     */
+    private static int royalStraightFlush(List<Card> cards) {
+        if (straightFlush(cards) == PokerResult.Straight_Flush.getValue()) {
+            List<Integer> cardPoints = getCardPoints(cards);
+            Collections.sort(cardPoints);
+            if (cardPoints.get(cardPoints.size() - 1) == Point.ACE.getValue()) {
+                return PokerResult.Royal_Straight_Flush.getValue();
+            }
+        }
+        return 0;
+    }
+
+    /**
      * 同花顺
      */
     private static int straightFlush(List<Card> cards) {
-        if (straight(cards) == 5 && flush(cards) == 6) {
-            return 9;
+        if (straight(cards) == PokerResult.Straight.getValue()
+                && flush(cards) == PokerResult.Flush.getValue()) {
+            return PokerResult.Straight_Flush.getValue();
         }
         return 0;
     }
@@ -66,7 +81,7 @@ public class PokerUtils {
                 count = 1;
             }
             if (count >= 4) {
-                return 8;
+                return PokerResult.Four_Of_A_Kind.getValue();
             }
         }
         return 0;
@@ -76,8 +91,9 @@ public class PokerUtils {
      * 葫芦
      */
     private static int fullHouse(List<Card> cards) {
-        if (threeOfAKind(cards) == 4 && pair(cards) == 2) {
-            return 7;
+        if (threeOfAKind(cards) == PokerResult.Three_Of_A_Kind.getValue()
+                && twoPairs(cards) == PokerResult.Two_Pair.getValue()) {
+            return PokerResult.Full_House.getValue();
         }
         return 0;
     }
@@ -92,7 +108,7 @@ public class PokerUtils {
                 return 0;
             }
         }
-        return 6;
+        return PokerResult.Flush.getValue();
     }
 
     /**
@@ -107,7 +123,7 @@ public class PokerUtils {
                 return 0;
             }
         }
-        return 5;
+        return PokerResult.Straight.getValue();
     }
 
     /**
@@ -124,7 +140,7 @@ public class PokerUtils {
                 count = 1;
             }
             if (count == 3) {
-                return 4;
+                return PokerResult.Three_Of_A_Kind.getValue();
             }
         }
         return 0;
@@ -135,22 +151,22 @@ public class PokerUtils {
      */
     private static int twoPairs(List<Card> cards) {
         List<Integer> cardPoints = getCardPoints(cards);
-        Collections.sort(cardPoints);
-        int count = 0;
-        int temp = 1;
-        for (int i = 1; i < cardPoints.size(); i++) {
-            if (cardPoints.get(i).equals(cardPoints.get(i - 1))) {
-                temp++;
+        Map<Integer, Integer> cardPointCount = new HashMap<>();
+        AtomicInteger pairCount = new AtomicInteger();
+        cardPoints.forEach(cardPoint -> {
+            if (cardPointCount.containsKey(cardPoint)) {
+                int count = cardPointCount.get(cardPoint) + 1;
+                if (count == 2) {
+                    pairCount.getAndIncrement();
+                }
+                cardPointCount.put(cardPoint, count);
             } else {
-                temp = 1;
+                cardPointCount.put(cardPoint, 1);
             }
-            if (temp == 2) {
-                count++;
-                temp = 1;
-            }
-            if (count == 2) {
-                return 3;
-            }
+        });
+
+        if (pairCount.get() == 2) {
+            return PokerResult.Two_Pair.getValue();
         }
         return 0;
     }
@@ -164,7 +180,7 @@ public class PokerUtils {
         Collections.sort(cardPoints);
         for (int i = 1; i < cardPoints.size(); i++) {
             if (cardPoints.get(i).equals(cardPoints.get(i - 1))) {
-                return 2;
+                return PokerResult.Pair.getValue();
             }
         }
         return 0;
