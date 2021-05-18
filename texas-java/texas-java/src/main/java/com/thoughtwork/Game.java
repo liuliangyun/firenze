@@ -28,6 +28,7 @@ public class Game {
         currentRound.setCurrentBid(bid);
         currentRound.setAwaitingPlayers(awaitingPlayers);
         currentRound.setRoundWagers(roundWagers);
+        Arrays.stream(players).forEach(player -> player.setTookAction(false));
     }
 
     public int getPot() {
@@ -114,6 +115,10 @@ public class Game {
 
     public Set<ActionType> getActivePlayerActions() {
         return currentRound.getActivePlayerActions();
+    }
+
+    public List<Player> getWinners() {
+        return Arrays.stream(players).filter(player -> player.isWin()).collect(Collectors.toList());
     }
 
 }

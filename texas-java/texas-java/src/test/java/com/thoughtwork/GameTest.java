@@ -7,7 +7,6 @@ import static org.junit.Assert.*;
 
 
 // 不考虑Allin
-// 不考虑牌型相同时，点数大小的比较
 public class GameTest {
     @Test
     public void player_a_should_be_the_first_active_player () {
@@ -228,7 +227,7 @@ public class GameTest {
     }
 
     @Test
-    public void should_player_win_when_player_is_the_only_one_active_player () {
+    public void should_player_win_all_pot_when_player_is_the_only_one_active_player () {
         Game game = new Game(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
         assertEquals(Round.PREFLOP, game.getCurrentRound());
 
@@ -311,12 +310,42 @@ public class GameTest {
 
 
     @Test
-    public void should_win_all_pot_when_only_one_winner () {
-
-    }
-
-    @Test
     public void should_divide_pot_when_has_multiple_winners () {
+        Player playerA = new Player("A");
+        Player playerB = new Player("B");
+        Player playerC = new Player("C");
+        Player playerD = new Player("D");
+        Game game = new Game(playerA, playerB, playerC, playerD);
 
+        assertEquals(Round.PREFLOP, game.getCurrentRound());
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+        game.execute(new Bet());
+
+        assertEquals(Round.FLOP, game.getCurrentRound());
+        game.execute(new Pass());
+        game.execute(new Pass());
+        game.execute(new Pass());
+        game.execute(new Pass());
+
+        assertEquals(Round.TURN, game.getCurrentRound());
+        game.execute(new Pass());
+        game.execute(new Pass());
+        game.execute(new Pass());
+        game.execute(new Pass());
+
+        assertEquals(Round.RIVER, game.getCurrentRound());
+        game.execute(new Pass());
+        game.execute(new Pass());
+        game.execute(new Pass());
+        game.execute(new Pass());
+
+        assertEquals(Round.SHOWDOWN, game.getCurrentRound());
+        assertEquals(playerA.isWin() ? game.getPot() / game.getWinners().size() : 0,  playerA.getAward());
+        assertEquals(playerB.isWin() ? game.getPot() / game.getWinners().size() : 0,  playerB.getAward());
+        assertEquals(playerC.isWin() ? game.getPot() / game.getWinners().size() : 0,  playerC.getAward());
+        assertEquals(playerD.isWin() ? game.getPot() / game.getWinners().size() : 0,  playerD.getAward());
     }
+
 }
