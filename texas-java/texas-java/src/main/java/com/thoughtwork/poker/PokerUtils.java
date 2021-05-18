@@ -1,7 +1,6 @@
 package com.thoughtwork.poker;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class PokerUtils {
@@ -9,6 +8,7 @@ public class PokerUtils {
     // cards 长度为7
     public static int getBestScore(List<Card> cards) {
         int bestScore = 0;
+        List<Card> bestCards = new ArrayList<>();
         for (int i = 0; i < cards.size(); i++) {
             for (int j = i + 1; j < cards.size(); j++) {
                 List<Card> cards5 = new ArrayList<>();
@@ -18,11 +18,289 @@ public class PokerUtils {
                 int score = getScore(cards5);
                 if (score > bestScore) {
                     bestScore = score;
+                    bestCards.clear();
+                    bestCards.addAll(cards5);
+                } else if (score == bestScore && compareCardsPoint(score, bestCards, cards5) == -1) {
+                    bestCards.clear();
+                    bestCards.addAll(cards5);
                 }
             }
         }
         return bestScore;
     }
+
+    private static int compareCardsPoint(int score, List<Card> cards1, List<Card> cards2) {
+        if (score == 10) {
+            return compareCardsPointForRoyalStraightFlush(cards1, cards2);
+        } else if (score == 9) {
+            return compareCardsPointForStraightFlush(cards1, cards2);
+        } else if (score == 8) {
+            return compareCardsPointForFourOfAKind(cards1, cards2);
+        } else if (score == 7) {
+            return compareCardsPointForFullHouse(cards1, cards2);
+        } else if (score == 6) {
+            return compareCardsPointForFlush(cards1, cards2);
+        } else if (score == 5) {
+            return compareCardsPointForStraight(cards1, cards2);
+        } else if (score == 4) {
+            return compareCardsPointForThreeOfAKind(cards1, cards2);
+        } else if (score == 3) {
+            return compareCardsPointForTwoPairs(cards1, cards2);
+        } else if (score == 2) {
+            return compareCardsPointForPair(cards1, cards2);
+        } else {
+            return compareCardsPointForHighCard(cards1, cards2);
+        }
+    }
+
+    private static int compareCardsPointForRoyalStraightFlush(List<Card> cards1, List<Card> cards2) {
+        return 0;
+    }
+
+    private static int compareCardsPointForStraightFlush(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+
+        return compareCardPointByMax(cardPoints1, cardPoints2);
+    }
+
+    private static int compareCardsPointForFourOfAKind(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+        Map<Integer, Integer> cardPointCount1 = getCardPointCount(cards1);
+        Map<Integer, Integer> cardPointCount2 = getCardPointCount(cards2);
+
+        List<Integer> pointForFour1 = new ArrayList<>();
+        List<Integer> anotherPoints1 = new ArrayList<>();
+        for (int key: cardPointCount1.keySet()) {
+            if (cardPointCount1.get(key) == 4) {
+                pointForFour1.add(key);
+            } else {
+                anotherPoints1.add(key);
+            }
+        }
+        List<Integer> pointForFour2 = new ArrayList<>();
+        List<Integer> anotherPoints2 = new ArrayList<>();
+        for (int key: cardPointCount2.keySet()) {
+            if (cardPointCount2.get(key) == 4) {
+                pointForFour2.add(key);
+            } else {
+                anotherPoints2.add(key);
+            }
+        }
+
+        Collections.sort(anotherPoints1);
+        Collections.sort(anotherPoints2);
+        Collections.sort(pointForFour1);
+        Collections.sort(pointForFour2);
+        pointForFour1.addAll(anotherPoints1);
+        pointForFour2.addAll(anotherPoints2);
+        return compareCardPointBySeq(pointForFour1, pointForFour2);
+    }
+
+    private static int compareCardsPointForFullHouse(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+        Map<Integer, Integer> cardPointCount1 = getCardPointCount(cards1);
+        Map<Integer, Integer> cardPointCount2 = getCardPointCount(cards2);
+
+        List<Integer> pointForThree1 = new ArrayList<>();
+        List<Integer> anotherPoints1 = new ArrayList<>();
+        for (int key: cardPointCount1.keySet()) {
+            if (cardPointCount1.get(key) == 3) {
+                pointForThree1.add(key);
+            } else {
+                anotherPoints1.add(key);
+            }
+        }
+
+        List<Integer> pointForThree2 = new ArrayList<>();
+        List<Integer> anotherPoints2 = new ArrayList<>();
+        for (int key: cardPointCount2.keySet()) {
+            if (cardPointCount2.get(key) == 3) {
+                pointForThree2.add(key);
+            } else {
+                anotherPoints2.add(key);
+            }
+        }
+
+        Collections.sort(anotherPoints1);
+        Collections.sort(anotherPoints2);
+        Collections.sort(pointForThree1);
+        Collections.sort(pointForThree2);
+        pointForThree1.addAll(anotherPoints1);
+        pointForThree2.addAll(anotherPoints2);
+
+        return compareCardPointBySeq(pointForThree1, pointForThree2);
+    }
+
+    private static int compareCardsPointForFlush(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+
+        return compareCardPointBySeq(cardPoints1, cardPoints2);
+    }
+
+    private static int compareCardsPointForStraight(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+
+        return compareCardPointByMax(cardPoints1, cardPoints2);
+    }
+
+    private static int compareCardsPointForThreeOfAKind(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+        Map<Integer, Integer> cardPointCount1 = getCardPointCount(cards1);
+        Map<Integer, Integer> cardPointCount2 = getCardPointCount(cards2);
+
+        List<Integer> pointForThree1 = new ArrayList<>();
+        List<Integer> anotherPoints1 = new ArrayList<>();
+        for (int key: cardPointCount1.keySet()) {
+            if (cardPointCount1.get(key) == 3) {
+                pointForThree1.add(key);
+            } else {
+                anotherPoints1.add(key);
+            }
+        }
+
+        List<Integer> pointForThree2 = new ArrayList<>();
+        List<Integer> anotherPoints2 = new ArrayList<>();
+        for (int key: cardPointCount2.keySet()) {
+            if (cardPointCount2.get(key) == 3) {
+                pointForThree2.add(key);
+            } else {
+                anotherPoints2.add(key);
+            }
+        }
+
+        Collections.sort(anotherPoints1);
+        Collections.sort(anotherPoints2);
+        Collections.sort(pointForThree1);
+        Collections.sort(pointForThree2);
+        pointForThree1.addAll(anotherPoints1);
+        pointForThree2.addAll(anotherPoints2);
+
+        return compareCardPointBySeq(pointForThree1, pointForThree2);
+    }
+
+    private static int compareCardsPointForTwoPairs(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+        Map<Integer, Integer> cardPointCount1 = getCardPointCount(cards1);
+        Map<Integer, Integer> cardPointCount2 = getCardPointCount(cards2);
+
+        List<Integer> pointForTwo1 = new ArrayList<>();
+        List<Integer> anotherPoints1 = new ArrayList<>();
+        for (int key: cardPointCount1.keySet()) {
+            if (cardPointCount1.get(key) == 2) {
+                pointForTwo1.add(key);
+            } else {
+                anotherPoints1.add(key);
+            }
+        }
+
+        List<Integer> pointForTwo2 = new ArrayList<>();
+        List<Integer> anotherPoints2 = new ArrayList<>();
+        for (int key: cardPointCount2.keySet()) {
+            if (cardPointCount2.get(key) == 2) {
+                pointForTwo2.add(key);
+            } else {
+                anotherPoints2.add(key);
+            }
+        }
+
+        Collections.sort(anotherPoints1);
+        Collections.sort(anotherPoints2);
+        Collections.sort(pointForTwo1);
+        Collections.sort(pointForTwo2);
+        pointForTwo1.addAll(anotherPoints1);
+        pointForTwo2.addAll(anotherPoints2);
+
+        return compareCardPointBySeq(pointForTwo1, pointForTwo2);
+    }
+
+    private static int compareCardsPointForPair(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+        Map<Integer, Integer> cardPointCount1 = getCardPointCount(cards1);
+        Map<Integer, Integer> cardPointCount2 = getCardPointCount(cards2);
+
+        List<Integer> pointForTwo1 = new ArrayList<>();
+        List<Integer> anotherPoints1 = new ArrayList<>();
+        for (int key: cardPointCount1.keySet()) {
+            if (cardPointCount1.get(key) == 2) {
+                pointForTwo1.add(key);
+            } else {
+                anotherPoints1.add(key);
+            }
+        }
+
+        List<Integer> pointForTwo2 = new ArrayList<>();
+        List<Integer> anotherPoints2 = new ArrayList<>();
+        for (int key: cardPointCount2.keySet()) {
+            if (cardPointCount2.get(key) == 2) {
+                pointForTwo2.add(key);
+            } else {
+                anotherPoints2.add(key);
+            }
+        }
+
+        Collections.sort(anotherPoints1);
+        Collections.sort(anotherPoints2);
+        Collections.sort(pointForTwo1);
+        Collections.sort(pointForTwo2);
+        pointForTwo1.addAll(anotherPoints1);
+        pointForTwo2.addAll(anotherPoints2);
+
+        return compareCardPointBySeq(pointForTwo1, pointForTwo2);
+    }
+
+    private static int compareCardsPointForHighCard(List<Card> cards1, List<Card> cards2) {
+        List<Integer> cardPoints1 = getCardPoints(cards1);
+        List<Integer> cardPoints2 = getCardPoints(cards2);
+        Collections.sort(cardPoints1);
+        Collections.sort(cardPoints2);
+
+        return compareCardPointBySeq(cardPoints1, cardPoints2);
+    }
+
+    private static int compareCardPointBySeq(List<Integer> cardPoints1, List<Integer> cardPoints2) {
+        for (int i = 0; i < cardPoints1.size(); i++) {
+            if (cardPoints1.get(i) > cardPoints2.get(i)) {
+                return 1;
+            } else if (cardPoints1.get(i) < cardPoints2.get(i)) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    private static int compareCardPointByMax(List<Integer> cardPoints1, List<Integer> cardPoints2) {
+        if (cardPoints1.get(cardPoints1.size() - 1) > cardPoints2.get(cardPoints2.size() - 1)) {
+            return 1;
+        } else if (cardPoints1.get(cardPoints1.size() - 1) < cardPoints2.get(cardPoints2.size() - 1)) {
+            return -1;
+        }
+        return 0;
+    }
+
 
     // 获得5张牌的得分，不同的牌型对应不同的得分
     // cards 长度为5
@@ -150,22 +428,8 @@ public class PokerUtils {
      * 两对
      */
     private static int twoPairs(List<Card> cards) {
-        List<Integer> cardPoints = getCardPoints(cards);
-        Map<Integer, Integer> cardPointCount = new HashMap<>();
-        AtomicInteger pairCount = new AtomicInteger();
-        cardPoints.forEach(cardPoint -> {
-            if (cardPointCount.containsKey(cardPoint)) {
-                int count = cardPointCount.get(cardPoint) + 1;
-                if (count == 2) {
-                    pairCount.getAndIncrement();
-                }
-                cardPointCount.put(cardPoint, count);
-            } else {
-                cardPointCount.put(cardPoint, 1);
-            }
-        });
-
-        if (pairCount.get() == 2) {
+        Map<Integer, Integer> cardPointCount = getCardPointCount(cards);
+        if (cardPointCount.values().stream().filter(count -> count >= 2).count() == 2) {
             return PokerResult.Two_Pair.getValue();
         }
         return 0;
@@ -192,6 +456,20 @@ public class PokerUtils {
 
     private static List<String> getCardColors(List<Card> cards) {
         return cards.stream().map(card -> card.getSuit().getValue()).collect(Collectors.toList());
+    }
+
+    private static Map<Integer, Integer> getCardPointCount(List<Card> cards) {
+        List<Integer> cardPoints = getCardPoints(cards);
+        Map<Integer, Integer> cardPointCount = new HashMap<>();
+        cardPoints.forEach(cardPoint -> {
+            if (cardPointCount.containsKey(cardPoint)) {
+                int count = cardPointCount.get(cardPoint) + 1;
+                cardPointCount.put(cardPoint, count);
+            } else {
+                cardPointCount.put(cardPoint, 1);
+            }
+        });
+        return cardPointCount;
     }
 
 }
