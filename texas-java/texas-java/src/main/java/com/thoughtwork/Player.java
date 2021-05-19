@@ -1,7 +1,7 @@
 package com.thoughtwork;
 
+import com.thoughtwork.poker.BestResult;
 import com.thoughtwork.poker.Card;
-import com.thoughtwork.poker.PokerResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Player {
     //手牌
     private List<Card> cards = new ArrayList<>();
     //玩家最佳组合牌型
-    private PokerResult pokerResult = null;
+    private BestResult bestResult = new BestResult();
 
     public Player(String name) {
         this.name = name;
@@ -89,11 +89,11 @@ public class Player {
         this.award = award;
     }
 
-    public PokerResult getPokerResult() {
-        return pokerResult;
+    public BestResult getBestResult() {
+        return bestResult;
     }
 
-    public void setPokerResult(PokerResult pokerResult) {
-        this.pokerResult = pokerResult;
+    public void setBestResult(BestResult bestResult) {
+        this.bestResult = bestResult;
     }
 }

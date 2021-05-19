@@ -2,6 +2,7 @@ package com.thoughtwork;
 
 import com.thoughtwork.action.*;
 import com.thoughtwork.poker.Poker;
+import com.thoughtwork.poker.type.AbstractPokerType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,14 +80,33 @@ public class Game {
                 poker.showdown(activePlayers);
                 int bestScore = activePlayers
                         .stream()
-                        .map(player -> player.getPokerResult().getValue())
+                        .map(player -> player.getBestResult().getPokerType().getScore())
                         .max(Integer::compareTo)
                         .get();
 
-                List<Player> winners = activePlayers
+                List<Player> playersWithBestScore = activePlayers
                         .stream()
-                        .filter(player -> player.getPokerResult().getValue() == bestScore)
+                        .filter(player -> player.getBestResult().getPokerType().getScore() == bestScore)
                         .collect(Collectors.toList());
+
+                List<Player> winners = new ArrayList<>();
+                if (playersWithBestScore.size() > 1) {
+                    AbstractPokerType type = playersWithBestScore.get(0).getBestResult().getPokerType();
+                    List<Player> tempWinners = new ArrayList<>();
+                    tempWinners.add(playersWithBestScore.get(0));
+                    for (int i = 1; i < playersWithBestScore.size(); i++) {
+                        int compareResult = type.compare(playersWithBestScore.get(i).getCards(), tempWinners.get(0).getCards());
+                        if (compareResult > 0) {
+                            tempWinners.clear();
+                            tempWinners.add(playersWithBestScore.get(i));
+                        } else if (compareResult == 0) {
+                            tempWinners.add(playersWithBestScore.get(i));
+                        }
+                    }
+                    winners.addAll(tempWinners);
+                } else {
+                    winners.addAll(playersWithBestScore);
+                }
                 winners.forEach(player -> {
                     player.setWin(true);
                     player.setAward(pot / winners.size());

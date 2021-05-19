@@ -1,6 +1,7 @@
 package com.thoughtwork;
 
 import com.thoughtwork.poker.*;
+import com.thoughtwork.poker.type.*;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.KING),
                 new Card(Suit.SPADE, Point.ACE)
         );
-        assertEquals(PokerResult.Royal_Straight_Flush, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new RoyalStraightFlush().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -36,7 +37,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.SEVEN),
                 new Card(Suit.SPADE, Point.SIX)
         );
-        assertEquals(PokerResult.Straight_Flush, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new StraightFlush().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -50,7 +51,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.THREE),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.Four_Of_A_Kind, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new FourOfAKind().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -64,7 +65,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.THREE),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.Full_House, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new FullHouse().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -78,7 +79,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.THREE),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.Flush, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new Flush().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -92,7 +93,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.TWO),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.Straight, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new Straight().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -106,7 +107,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.TWO),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.Three_Of_A_Kind, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new ThreeOfAKind().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -120,7 +121,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.TWO),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.Two_Pair, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new TwoPairs().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -134,7 +135,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.TWO),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.Pair, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new Pair().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
     @Test
@@ -148,7 +149,7 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.TWO),
                 new Card(Suit.SPADE, Point.FOUR)
         );
-        assertEquals(PokerResult.High_Card, PokerResult.valueOf(PokerUtils.getBestScore(cards)));
+        assertEquals(new HighCard().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
     }
 
 }
