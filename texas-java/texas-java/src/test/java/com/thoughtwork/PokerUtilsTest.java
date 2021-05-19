@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PokerUtilsTest {
 
@@ -23,6 +24,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.ACE)
         );
         assertEquals(new RoyalStraightFlush().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.TEN),
+                new Card(Suit.SPADE, Point.JACK),
+                new Card(Suit.SPADE, Point.QUEEN),
+                new Card(Suit.SPADE, Point.KING),
+                new Card(Suit.SPADE, Point.ACE)
+        )));
     }
 
     @Test
@@ -37,6 +45,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.SIX)
         );
         assertEquals(new StraightFlush().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.TEN),
+                new Card(Suit.SPADE, Point.NINE),
+                new Card(Suit.SPADE, Point.EIGHT),
+                new Card(Suit.SPADE, Point.SEVEN),
+                new Card(Suit.SPADE, Point.SIX)
+        )));
     }
 
     @Test
@@ -51,6 +66,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new FourOfAKind().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.HEART, Point.QUEEN),
+                new Card(Suit.CLUB, Point.QUEEN),
+                new Card(Suit.SPADE, Point.QUEEN),
+                new Card(Suit.DIAMOND, Point.QUEEN),
+                new Card(Suit.SPADE, Point.FOUR)
+        )));
     }
 
     @Test
@@ -65,6 +87,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new FullHouse().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.JACK),
+                new Card(Suit.HEART, Point.KING),
+                new Card(Suit.HEART, Point.JACK),
+                new Card(Suit.DIAMOND, Point.JACK),
+                new Card(Suit.SPADE, Point.KING)
+        )));
     }
 
     @Test
@@ -79,6 +108,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new Flush().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.JACK),
+                new Card(Suit.SPADE, Point.TEN),
+                new Card(Suit.SPADE, Point.KING),
+                new Card(Suit.SPADE, Point.THREE),
+                new Card(Suit.SPADE, Point.FOUR)
+        )));
     }
 
     @Test
@@ -93,6 +129,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new Straight().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.FIVE),
+                new Card(Suit.HEART, Point.SEVEN),
+                new Card(Suit.HEART, Point.EIGHT),
+                new Card(Suit.SPADE, Point.SIX),
+                new Card(Suit.CLUB, Point.NINE)
+        )));
     }
 
     @Test
@@ -107,6 +150,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new ThreeOfAKind().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.SIX),
+                new Card(Suit.HEART, Point.TEN),
+                new Card(Suit.HEART, Point.EIGHT),
+                new Card(Suit.SPADE, Point.TEN),
+                new Card(Suit.CLUB, Point.TEN)
+        )));
     }
 
     @Test
@@ -121,6 +171,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new TwoPairs().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.SIX),
+                new Card(Suit.HEART, Point.TEN),
+                new Card(Suit.HEART, Point.SIX),
+                new Card(Suit.SPADE, Point.TEN),
+                new Card(Suit.CLUB, Point.NINE)
+        )));
     }
 
     @Test
@@ -135,6 +192,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new Pair().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.SIX),
+                new Card(Suit.HEART, Point.SIX),
+                new Card(Suit.SPADE, Point.JACK),
+                new Card(Suit.CLUB, Point.NINE),
+                new Card(Suit.SPADE, Point.FOUR)
+        )));
     }
 
     @Test
@@ -149,6 +213,13 @@ public class PokerUtilsTest {
                 new Card(Suit.SPADE, Point.FOUR)
         );
         assertEquals(new HighCard().getScore(), PokerUtils.getBestResult(cards).getPokerType().getScore());
+        assertTrue(PokerUtils.getBestResult(cards).getBestCards().containsAll(Arrays.asList(
+                new Card(Suit.SPADE, Point.SIX),
+                new Card(Suit.HEART, Point.QUEEN),
+                new Card(Suit.SPADE, Point.JACK),
+                new Card(Suit.CLUB, Point.NINE),
+                new Card(Suit.SPADE, Point.FOUR)
+        )));
     }
 
 }
