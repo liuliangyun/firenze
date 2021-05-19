@@ -9,7 +9,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-// 不考虑牌型相同时，点数大小的比较
 public class PokerUtilsTest {
 
     @Test
