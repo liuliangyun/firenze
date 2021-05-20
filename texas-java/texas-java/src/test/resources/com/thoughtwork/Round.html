@@ -1,0 +1,41 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+    <head>
+        <link href="../../concordion.css" rel="stylesheet" type="text/css" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+
+    <body>
+        <h1>德州扑克轮次内加注规则</h1>
+
+        <p>德州扑克轮次内投注的规则如下：</p>
+
+        <ul>
+            <li>每一轮次中，尚在活跃玩家依次行动</li>
+            <li>玩家可采取的行动有：pass，bet，raise，fold，其中：
+                <ul>
+                    <li>pass表示当前轮空，将行动权交给下一个玩家，只有在没有玩家采取任何行动时，才能pass；</li>
+                    <li>bet表示投注，在没有加注的情况下，投注为最小投注金额。如果有加注，那么则为投注额与已投注金额的差值；</li>
+                    <li>raise表示加注，一旦加注完成，那么所有未达到加注金额的玩家都需要重新采取行动以补足差额；</li>
+                    <li>fold表示放弃，如果任意时刻，玩家选择fold，则退出游戏；</li>
+                </ul>
+            </li>
+            <li>知道所有玩家都投注，且仍在活跃的玩家投注金额相等时，进入下一轮</li>
+            <li>只剩一位活跃玩家，则游戏结束</li>
+        </ul>
+
+        <p>下面让我们看看具体的例子，以帮助我们更具体的理解规则。</p>
+
+        <p>例如，我们共有
+            <span concordion:set="#players">A,B,C</span>三位玩家参与
+            <span concordion:execute="newGame(#players)">游戏</span>，
+            那么第一个采取行动的玩家应该是<span concordion:assert-equals="getCurrentActivePlayerName()">A</span>，
+            如果他<span concordion:execute="bet()">投注</span>，
+            则当前底池金额应是<span concordion:assert-true="isPotEqualMinWager()">最小投注额</span>，
+            后面所有玩家都应投注最小投注额。
+            如果<span concordion:execute="bet()">B</span>,
+            <span concordion:execute="bet()">C</span>依次跟投，
+            那么最后所有人投注金额相同，
+            <span concordion:execute="isEnterNextRound()">进入下一轮次</span>。
+        </p>
+    </body>
+</html>
